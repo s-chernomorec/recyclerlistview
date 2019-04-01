@@ -6,16 +6,14 @@ import { Dimension, LayoutProvider } from "../dependencies/LayoutProvider";
 import CustomError from "../exceptions/CustomError";
 
 export abstract class LayoutManager {
-    public getOffsetForIndex(index: number): Point {
+    public getOffsetForIndex(index: number): Point | null {
         const layouts = this.getLayouts();
+
         if (layouts.length > index) {
             return { x: layouts[index].x, y: layouts[index].y };
-        } else {
-            throw new CustomError({
-                message: "No layout available for index: " + index,
-                type: "LayoutUnavailableException",
-            });
         }
+
+        return null;
     }
 
     //You can ovveride this incase you want to override style in some cases e.g, say you want to enfore width but not height
@@ -66,15 +64,12 @@ export class WrapGridLayoutManager extends LayoutManager {
         return this._layouts;
     }
 
-    public getOffsetForIndex(index: number): Point {
+    public getOffsetForIndex(index: number): Point | null {
         if (this._layouts.length > index) {
             return { x: this._layouts[index].x, y: this._layouts[index].y };
-        } else {
-            throw new CustomError({
-                message: "No layout available for index: " + index,
-                type: "LayoutUnavailableException",
-            });
         }
+
+        return null;
     }
 
     public overrideLayout(index: number, dim: Dimension): boolean {

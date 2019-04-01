@@ -142,8 +142,11 @@ export default class VirtualRenderer {
             let offset = 0;
             if (this._layoutManager && this._params) {
                 const point = this._layoutManager.getOffsetForIndex(firstVisibleIndex);
-                this._scrollOnNextUpdate(point);
-                offset = this._params.isHorizontal ? point.x : point.y;
+
+                if (point) {
+                    this._scrollOnNextUpdate(point);
+                    offset = this._params.isHorizontal ? point.x : point.y;
+                }
             }
             this._viewabilityTracker.forceRefreshWithOffset(offset);
         }
@@ -167,7 +170,11 @@ export default class VirtualRenderer {
         if (this._params) {
             const initialRenderIndex = Default.value<number>(this._params.initialRenderIndex, 0);
             if (initialRenderIndex > 0 && this._layoutManager) {
-                offset = this._layoutManager.getOffsetForIndex(initialRenderIndex);
+                const offsetForIndex = this._layoutManager.getOffsetForIndex(initialRenderIndex);
+
+                if (offsetForIndex) {
+                    offset = offsetForIndex;
+                }
                 this._params.initialOffset = this._params.isHorizontal ? offset.x : offset.y;
             } else {
                 if (this._params.isHorizontal) {
